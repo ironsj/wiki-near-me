@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker, Region } from 'react-native-maps';
 import axios, { AxiosResponse } from 'axios';
 import { Article } from './datatypes';
@@ -31,20 +31,36 @@ export default function App() {
   const findArticles = () => {
     let centralLat: string = centralCoordinates.latitude;
     let centralLong: string = centralCoordinates.longitude;
-    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&gscoord=', centralLat, '|', centralLong, '&gslimit=50&gsradius=10000&list=geosearch&format=json');
+    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=', centralLat, '|', centralLong, '&ggslimit=max&ggsradius=10000&prop=coordinates|pageimages&format=json');
 
     console.log(searchurl);
 
     axios.request({
       url: searchurl,
       method: 'GET',
-    }).then((response: AxiosResponse) => response.data.query.geosearch)
+    }).then((response: AxiosResponse) => response.data.query.pages)
       .then((articleData: any) => {
         articles.splice(0);
-        let newArticles = [];
-        newArticles.push(...articleData);
+        let newArticles: Array<Article> = [];
+        Object.keys(articleData || {}).forEach((key) => {
+          console.log(key);
+          let article = articleData[key];
+          let newArticle: Article = {
+            title: article.title,
+            lat: article.hasOwnProperty('coordinates') ? article.coordinates[0].lat : -91,
+            lon: article.hasOwnProperty('coordinates') ? article.coordinates[0].lon : -181,
+            pageid: article.pageid,
+            thumbnail: article.thumbnail ? article.thumbnail.source : undefined,
+          };
+          if (newArticle.lat == -91 || newArticle.lon == -181) {
+            return;
+          }
+          newArticles.push(newArticle);
+        });
         setArticles(newArticles);
-        console.log(articles)
+      })
+      .catch((error: any) => {
+        console.log(error);
       });
   }
 
@@ -80,6 +96,10 @@ export default function App() {
             coordinate={{ latitude: e.lat, longitude: e.lon }}
             title={e.title}
             description={e.title}
+            onCalloutPress={() => {
+              console.log(e.title)
+              Linking.openURL('https://en.wikipedia.org/wiki/' + e.title)
+            }}
           />
         ))}
       </MapView>
