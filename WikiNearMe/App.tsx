@@ -31,7 +31,7 @@ export default function App() {
   const findArticles = () => {
     let centralLat: string = centralCoordinates.latitude;
     let centralLong: string = centralCoordinates.longitude;
-    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=', centralLat, '|', centralLong, '&ggslimit=max&ggsradius=10000&prop=coordinates|pageimages&format=json');
+    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=coordinates|pageimages&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=', centralLat, '|', centralLong, '&ggslimit=max&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary');
 
     console.log(searchurl);
 
