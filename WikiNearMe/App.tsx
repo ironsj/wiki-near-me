@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { Linking, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, Region } from 'react-native-maps';
+import { Button, Linking, StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import axios, { AxiosResponse } from 'axios';
 import { Article } from './datatypes';
-import { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
+import { Image } from 'react-native';
+
 
 export default function App() {
   let centralCoordinates = {
@@ -72,13 +74,17 @@ export default function App() {
     <View style={styles.container}>
       <MapView
         style={{ ...StyleSheet.absoluteFillObject, }}
-        provider={undefined}
+        provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
+        showsMyLocationButton={true}
         initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
+        }}
+        onMapReady={() => {
+          findArticles()
         }}
         onRegionChange={(region) => {
           let coor = getCentralCoordinates(region)
