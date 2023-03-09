@@ -1,10 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import axios, { AxiosResponse } from 'axios';
 import { Article } from './datatypes';
 import React, { SetStateAction, useState } from 'react';
-import { Image } from 'react-native';
 
 
 export default function App() {
