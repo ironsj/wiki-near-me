@@ -31,7 +31,7 @@ export default function App() {
   const findArticles = () => {
     let centralLat: string = centralCoordinates.latitude;
     let centralLong: string = centralCoordinates.longitude;
-    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&format=json&pithumbsize=500&pilicense=any&prop=coordinates|pageimages|description&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=', centralLat, '|', centralLong, '&ggslimit=max&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary');
+    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&format=json&pithumbsize=500&pilicense=any&prop=coordinates|pageimages|description&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=', centralLat, '|', centralLong, '&ggslimit=50&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary');
 
     console.log(searchurl);
 
@@ -42,6 +42,7 @@ export default function App() {
       .then((articleData: any) => {
         articles.splice(0);
         let newArticles: Array<Article> = [];
+        let i = 0
         Object.keys(articleData || {}).forEach((key) => {
           let article = articleData[key];
           let newArticle: Article = {
@@ -54,6 +55,11 @@ export default function App() {
           };
           if (newArticle.lat == -91 || newArticle.lon == -181) {
             return;
+          }
+
+          if (article.thumbnail !== undefined) {
+            console.log(i)
+            i++
           }
           newArticles.push(newArticle);
         });
