@@ -42,7 +42,6 @@ export default function App() {
       .then((articleData: any) => {
         articles.splice(0);
         let newArticles: Array<Article> = [];
-        let i = 0
         Object.keys(articleData || {}).forEach((key) => {
           let article = articleData[key];
           let newArticle: Article = {
@@ -55,11 +54,6 @@ export default function App() {
           };
           if (newArticle.lat == -91 || newArticle.lon == -181) {
             return;
-          }
-
-          if (article.thumbnail !== undefined) {
-            console.log(i)
-            i++
           }
           newArticles.push(newArticle);
         });
