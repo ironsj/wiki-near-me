@@ -1,5 +1,5 @@
-import { Linking, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import { Linking, StyleSheet, Text, View, Image, ImageSourcePropType, ImageURISource } from 'react-native';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import axios, { AxiosResponse } from 'axios';
 import { Article } from './datatypes';
 import React, { SetStateAction, useState } from 'react';
@@ -43,7 +43,6 @@ export default function App() {
         articles.splice(0);
         let newArticles: Array<Article> = [];
         Object.keys(articleData || {}).forEach((key) => {
-          console.log(key);
           let article = articleData[key];
           let newArticle: Article = {
             title: article.title,
@@ -101,12 +100,28 @@ export default function App() {
             key={e.title}
             coordinate={{ latitude: e.lat, longitude: e.lon }}
             title={e.title}
-            description={e.title}
-            onCalloutPress={() => {
+            description={e.title}>
+            <Callout tooltip onPress={() => {
               console.log(e.title)
               Linking.openURL('https://en.wikipedia.org/wiki/' + e.title)
-            }}
-          />
+            }}>
+              <View>
+                <View style={styles.calloutBubble}>
+                  <Text style={{}}>
+                    {e.title}
+                  </Text>
+                  <Text>
+                    <Image
+                      source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/440px-Image_created_with_a_mobile_phone.png' }}
+                      style={{ width: 50, height: 50 }}
+                    />
+                  </Text>
+                </View>
+                <View style={styles.arrowBorder} />
+                <View style={styles.arrow} />
+              </View>
+            </Callout>
+          </Marker>
         ))}
       </MapView>
     </View>
@@ -119,5 +134,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  calloutBubble: {
+    flexDirection: "column",
+    alignSelf: "flex-start",
+    backgroundColor: "#fff",
+    borderRadius: 6,
+    borderColor: "#ccc",
+    borderWidth: 0.5,
+    padding: 15,
+    width: 150,
+  },
+  arrow: {
+    backgroundColor: "transparent",
+    borderWidth: 16,
+    borderColor: "transparent",
+    borderTopColor: "#fff",
+    alignSelf: "center",
+    marginTop: -32,
+  },
+  arrowBorder: {
+    backgroundColor: "transparent",
+    borderWidth: 16,
+    borderColor: "transparent",
+    borderTopColor: "#007a87",
+    alignSelf: "center",
+    marginTop: -0.5,
   },
 });
