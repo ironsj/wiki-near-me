@@ -8,6 +8,7 @@ interface Article {
         width: number;
         height: number;
     };
+    description: string;
 };
 
 export { Article };
