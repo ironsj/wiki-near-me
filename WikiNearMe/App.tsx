@@ -31,7 +31,7 @@ export default function App() {
   const findArticles = () => {
     let centralLat: string = centralCoordinates.latitude;
     let centralLong: string = centralCoordinates.longitude;
-    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=coordinates|pageimages&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=', centralLat, '|', centralLong, '&ggslimit=max&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary');
+    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&format=json&pithumbsize=500&pilicense=any&prop=coordinates|pageimages&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=', centralLat, '|', centralLong, '&ggslimit=max&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary');
 
     console.log(searchurl);
 
@@ -49,7 +49,7 @@ export default function App() {
             lat: article.hasOwnProperty('coordinates') ? article.coordinates[0].lat : -91,
             lon: article.hasOwnProperty('coordinates') ? article.coordinates[0].lon : -181,
             pageid: article.pageid,
-            thumbnail: article.thumbnail ? article.thumbnail.source : undefined,
+            thumbnail: article.thumbnail ? { source: article.thumbnail.source, width: article.thumbnail.width, height: article.thumbnail.height } : undefined,
           };
           if (newArticle.lat == -91 || newArticle.lon == -181) {
             return;
@@ -102,7 +102,7 @@ export default function App() {
             title={e.title}
             description={e.title}>
             <Callout tooltip onPress={() => {
-              console.log(e.title)
+              console.log(e, typeof e.thumbnail?.source)
               Linking.openURL('https://en.wikipedia.org/wiki/' + e.title)
             }}>
               <View>
@@ -112,8 +112,8 @@ export default function App() {
                   </Text>
                   <Text>
                     <Image
-                      source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/440px-Image_created_with_a_mobile_phone.png' }}
-                      style={{ width: 50, height: 50 }}
+                      source={typeof e.thumbnail === undefined ? require('./assets/Wikipedia-logo-transparent.png') : { uri: e.thumbnail?.source }}
+                      style={{ width: 100, height: 100, resizeMode: 'cover' }}
                     />
                   </Text>
                 </View>
