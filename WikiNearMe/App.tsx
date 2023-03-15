@@ -82,6 +82,8 @@ export default function App() {
           longitudeDelta: 0.0421
         }}
         onMapReady={() => {
+          let coor = getCentralCoordinates(region)
+          centralCoordinates = coor
           findArticles()
         }}
         onRegionChange={(region) => {
