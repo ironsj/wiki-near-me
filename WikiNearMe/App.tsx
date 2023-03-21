@@ -13,6 +13,8 @@ export default function App() {
 
   let [articles, setArticles] = useState(Array<Article>());
 
+  let defaultImage = require('./assets/Wikipedia-logo-transparent.png');
+
   const [region, setRegion] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
@@ -102,7 +104,10 @@ export default function App() {
             coordinate={{ latitude: e.lat, longitude: e.lon }}
             title={e.title}
             description={e.title}
-            onPress={() => console.log(e, e.thumbnail)}>
+            onPress={() => {
+              console.log(e, typeof e.thumbnail)
+            }
+            }>
             <Callout tooltip onPress={() => {
               Linking.openURL('https://en.wikipedia.org/wiki/' + e.title)
             }}>
@@ -116,8 +121,11 @@ export default function App() {
                   </Text>
                   <Text>
                     <Image
-                      source={typeof e.thumbnail === undefined ? require('./assets/Wikipedia-logo-transparent.png') : { uri: e.thumbnail?.source }}
+                      source={e.thumbnail ? { uri: e.thumbnail?.source } : defaultImage}
+                      //source={typeof e.thumbnail === undefined ? require('./assets/Wikipedia-logo-transparent.png') : { uri: e.thumbnail?.source }}
                       style={{ width: 100, height: 80, resizeMode: 'cover' }}
+                      alt={`${e.title}, ${e.description}`}
+                      resizeMethod='resize'
                     />
                   </Text>
                 </View>

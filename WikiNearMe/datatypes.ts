@@ -1,3 +1,5 @@
+import { ImageURISource } from "react-native/types";
+
 interface Article {
     title: string;
     lat: number;
