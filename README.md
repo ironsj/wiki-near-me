@@ -3,9 +3,8 @@ This is an application I am creating that allows the user to see locations with 
 1. To create my first ever React Native application
 2. I love Wikipedia
 
-### Todo:
-* Improve look of custom callout
-* Find out why the default image is not appearing for articles that are not returned from the API with images
+### Todo (bold is what I plan on working on next):
+* **Improve look of custom callout**
 * Make it more obvious to the user they can click the callout to go to the Wikipedia page
  * Give the user the option to choose between viewing the Wikipedia page or getting directions to the location
 * Find distance displayed on the map to avoid making requests for articles that will not be within the range
