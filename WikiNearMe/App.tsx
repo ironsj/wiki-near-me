@@ -110,19 +110,28 @@ export default function App() {
             }}>
               <View>
                 <View style={styles.calloutBubble}>
-                  <Text style={{}}>
+                  <Text style={{ fontFamily: 'Palatino', fontWeight: 'bold' }}>
                     {e.title}
                   </Text>
-                  <Text style={{}}>
-                    {e.description}
-                  </Text>
-                  <Text>
+                  <View
+                    style={{
+                      borderBottomColor: 'black',
+                      borderBottomWidth: 1,
+                      marginLeft: 5,
+                      marginRight: 5,
+                      paddingBottom: 5,
+                    }}
+                  />
+                  <View style={{ alignSelf: 'center', margin: 'auto' }}>
                     <Image
                       source={e.thumbnail ? { uri: e.thumbnail?.source } : defaultImage}
                       style={{ width: 100, height: 80, resizeMode: 'cover' }}
                       alt={`${e.title}, ${e.description}`}
                       resizeMethod='resize'
                     />
+                  </View>
+                  <Text style={{ fontFamily: 'Arial' }}>
+                    {e.description}
                   </Text>
                 </View>
                 <View style={styles.arrowBorder} />
@@ -146,12 +155,14 @@ const styles = StyleSheet.create({
   calloutBubble: {
     flexDirection: "column",
     alignSelf: "flex-start",
+    justifyContent: "space-around",
     backgroundColor: "#fff",
     borderRadius: 6,
     borderColor: "#ccc",
     borderWidth: 0.5,
     padding: 15,
-    width: 200,
+    width: 250,
+    height: 200,
   },
   arrow: {
     backgroundColor: "transparent",
