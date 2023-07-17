@@ -1,4 +1,4 @@
-import { Linking, StyleSheet, Text, View, Image, ImageSourcePropType, ImageURISource } from 'react-native';
+import { Linking, StyleSheet, Text, View, Image } from 'react-native';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import axios, { AxiosResponse } from 'axios';
 import { Article } from './datatypes';
