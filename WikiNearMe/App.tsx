@@ -1,29 +1,33 @@
-import { Linking, StyleSheet, Text, View, Image } from 'react-native';
-import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import axios, { AxiosResponse } from 'axios';
-import { Article } from './datatypes';
-import React, { SetStateAction, useState } from 'react';
-
+import { Linking, StyleSheet, Text, View, Image } from "react-native";
+import MapView, {
+  Callout,
+  Marker,
+  PROVIDER_GOOGLE,
+  Region,
+} from "react-native-maps";
+import axios, { AxiosResponse } from "axios";
+import { Article } from "./datatypes";
+import React, { SetStateAction, useState } from "react";
 
 export default function App() {
   let centralCoordinates = {
-    latitude: '',
-    longitude: '',
-  }
+    latitude: "",
+    longitude: "",
+  };
 
   let [articles, setArticles] = useState(Array<Article>());
 
-  let defaultImage = require('./assets/Wikipedia-logo-transparent.png');
+  let defaultImage = require("./assets/Wikipedia-logo-transparent.png");
 
   const [region, setRegion] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
     latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421
+    longitudeDelta: 0.0421,
   });
 
   function getCentralCoordinates(region: Region) {
-    console.log(region.latitude, region.longitude)
+    console.log(region.latitude, region.longitude);
     return {
       longitude: region.longitude.toString(),
       latitude: region.latitude.toString(),
@@ -33,14 +37,22 @@ export default function App() {
   const findArticles = () => {
     let centralLat: string = centralCoordinates.latitude;
     let centralLong: string = centralCoordinates.longitude;
-    let searchurl: string = ''.concat('https://en.wikipedia.org/w/api.php?action=query&format=json&pithumbsize=500&pilicense=any&prop=coordinates|pageimages|description&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=', centralLat, '|', centralLong, '&ggslimit=50&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary');
+    let searchurl: string = "".concat(
+      "https://en.wikipedia.org/w/api.php?action=query&format=json&pithumbsize=500&pilicense=any&prop=coordinates|pageimages|description&meta=&generator=geosearch&formatversion=2&colimit=100&coprop=globe&coprimary=primary&ggscoord=",
+      centralLat,
+      "|",
+      centralLong,
+      "&ggslimit=50&ggsradius=10000&ggsglobe=earth&ggsnamespace=0&ggsprop=globe&ggsprimary=primary"
+    );
 
     console.log(searchurl);
 
-    axios.request({
-      url: searchurl,
-      method: 'GET',
-    }).then((response: AxiosResponse) => response.data.query.pages)
+    axios
+      .request({
+        url: searchurl,
+        method: "GET",
+      })
+      .then((response: AxiosResponse) => response.data.query.pages)
       .then((articleData: any) => {
         articles.splice(0);
         let newArticles: Array<Article> = [];
@@ -48,11 +60,21 @@ export default function App() {
           let article = articleData[key];
           let newArticle: Article = {
             title: article.title,
-            lat: article.hasOwnProperty('coordinates') ? article.coordinates[0].lat : -91,
-            lon: article.hasOwnProperty('coordinates') ? article.coordinates[0].lon : -181,
+            lat: article.hasOwnProperty("coordinates")
+              ? article.coordinates[0].lat
+              : -91,
+            lon: article.hasOwnProperty("coordinates")
+              ? article.coordinates[0].lon
+              : -181,
             pageid: article.pageid,
             description: article.description,
-            thumbnail: article.thumbnail ? { source: article.thumbnail.source, width: article.thumbnail.width, height: article.thumbnail.height } : undefined,
+            thumbnail: article.thumbnail
+              ? {
+                  source: article.thumbnail.source,
+                  width: article.thumbnail.width,
+                  height: article.thumbnail.height,
+                }
+              : undefined,
           };
           if (newArticle.lat == -91 || newArticle.lon == -181) {
             return;
@@ -64,38 +86,44 @@ export default function App() {
       .catch((error: any) => {
         console.log(error);
       });
-  }
+  };
 
-  const onRegionChangeComplete = (newRegion: SetStateAction<{ latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; }>) => {
+  const onRegionChangeComplete = (
+    newRegion: SetStateAction<{
+      latitude: number;
+      longitude: number;
+      latitudeDelta: number;
+      longitudeDelta: number;
+    }>
+  ) => {
     setRegion(newRegion);
   };
 
   return (
     <View style={styles.container}>
       <MapView
-        style={{ ...StyleSheet.absoluteFillObject, }}
-        provider={PROVIDER_GOOGLE}
+        style={{ ...StyleSheet.absoluteFillObject }}
         showsUserLocation={true}
         showsMyLocationButton={true}
         initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
           latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+          longitudeDelta: 0.0421,
         }}
         onMapReady={() => {
-          let coor = getCentralCoordinates(region)
-          centralCoordinates = coor
-          findArticles()
+          let coor = getCentralCoordinates(region);
+          centralCoordinates = coor;
+          findArticles();
         }}
         onRegionChange={(region) => {
-          let coor = getCentralCoordinates(region)
-          centralCoordinates = coor
-          console.log(centralCoordinates)
+          let coor = getCentralCoordinates(region);
+          centralCoordinates = coor;
+          console.log(centralCoordinates);
         }}
         onRegionChangeComplete={() => {
-          findArticles()
-          onRegionChangeComplete
+          findArticles();
+          onRegionChangeComplete;
         }}
       >
         {articles.map((e: Article) => (
@@ -104,35 +132,41 @@ export default function App() {
             coordinate={{ latitude: e.lat, longitude: e.lon }}
             title={e.title}
             description={e.title}
-            onPress={() => console.log(e, typeof e.thumbnail)}>
-            <Callout tooltip onPress={() => {
-              Linking.openURL('https://en.wikipedia.org/wiki/' + e.title)
-            }}>
+            onPress={() => console.log(e, typeof e.thumbnail)}
+          >
+            <Callout
+              tooltip
+              onPress={() => {
+                Linking.openURL("https://en.wikipedia.org/wiki/" + e.title);
+              }}
+            >
               <View>
                 <View style={styles.calloutBubble}>
-                  <Text style={{ fontFamily: 'Palatino', fontWeight: 'bold' }}>
+                  <Text style={{ fontFamily: "Palatino", fontWeight: "bold" }}>
                     {e.title}
                   </Text>
                   <View
                     style={{
-                      borderBottomColor: 'black',
+                      borderBottomColor: "black",
                       borderBottomWidth: 1,
                       marginLeft: 5,
                       marginRight: 5,
                       paddingBottom: 5,
                     }}
                   />
-                  <View style={{ alignSelf: 'center', margin: 'auto' }}>
+                  <View style={{ alignSelf: "center", margin: "auto" }}>
                     <Image
-                      source={e.thumbnail ? { uri: e.thumbnail?.source } : defaultImage}
-                      style={{ width: 100, height: 80, resizeMode: 'cover' }}
+                      source={
+                        e.thumbnail
+                          ? { uri: e.thumbnail?.source }
+                          : defaultImage
+                      }
+                      style={{ width: 100, height: 80, resizeMode: "cover" }}
                       alt={`${e.title}, ${e.description}`}
-                      resizeMethod='resize'
+                      resizeMethod="resize"
                     />
                   </View>
-                  <Text style={{ fontFamily: 'Arial' }}>
-                    {e.description}
-                  </Text>
+                  <Text style={{ fontFamily: "Arial" }}>{e.description}</Text>
                 </View>
                 <View style={styles.arrowBorder} />
                 <View style={styles.arrow} />
